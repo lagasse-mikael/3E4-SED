@@ -1,0 +1,18 @@
+{
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "express": "^4.17.1",
+    "nodemon": "^2.0.12"
+  },
+  "name": "jesaispas",
+  "version": "0.0.1",
+  "description": "Je sais pas monnome",
+  "main": "serveur.js",
+  "type": "module",
+  "scripts": {
+    "start" : "node serveur.js",
+    "dev" : "nodemon serveur.js --inspect"
+  },
+  "author": "Mikael Lagasse",
+  "license": "ISC"
+}
