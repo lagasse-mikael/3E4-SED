@@ -1,8 +1,16 @@
 import express from 'express';
 import dayjs from 'dayjs';
 
+import methodMiddleware from './middlewares/method.js';
+import errorMiddleware from './middlewares/error.js';
+
+import planetesRoutes from './routes/planetes.routes.js';
+
 const app = express();
 const OK = 200;
+
+app.use(methodMiddleware);
+app.use(planetesRoutes);
 
 app.get('/premiere', (request, reponse) => {
     reponse.status(OK);
@@ -11,7 +19,7 @@ app.get('/premiere', (request, reponse) => {
     console.log(request)
 })
 
-app.get('/math/somme', (request, reponse) => {
+app.get('/math/operation', (request, reponse) => {
 
     const a = request.query.a != undefined ? parseInt(request.query.a, 10) : 0;
     const b = request.query.b != undefined ? parseInt(request.query.b, 10) : 0;
@@ -53,5 +61,7 @@ app.get('/date', (request, reponse) => {
     reponse.set('Content-Type', 'text/html')
     reponse.send(`<div style="font-size:250px;text-align:center;padding-top:150px;">${dayjs().format('YYYY-MM-DD HH:mm:ss')}</div>`)
 })
+
+app.use(errorMiddleware);
 
 export default app
