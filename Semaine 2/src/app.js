@@ -1,16 +1,20 @@
-import express from 'express';
+import express, { json } from 'express';
 import dayjs from 'dayjs';
 
 import methodMiddleware from './middlewares/method.js';
 import errorMiddleware from './middlewares/error.js';
 
 import planetesRoutes from './routes/planetes.routes.js';
+import elementRoutes from './routes/elements.routes.js';
 
 const app = express();
 const OK = 200;
 
-app.use(methodMiddleware);
-app.use(planetesRoutes);
+app.use(express.json())
+app.use(methodMiddleware)
+app.use('/planets',planetesRoutes)
+app.use('/elements',elementRoutes)
+
 
 app.get('/premiere', (request, reponse) => {
     reponse.status(OK);
