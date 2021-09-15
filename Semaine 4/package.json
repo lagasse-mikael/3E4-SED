@@ -1,0 +1,25 @@
+{
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "dayjs": "^1.10.6",
+    "dotenv-flow": "^3.2.0",
+    "express": "^4.17.1",
+    "http-errors": "^1.8.0",
+    "http-status": "^1.5.0",
+    "mongoose": "^6.0.5"
+  },
+  "name": "jesaispas",
+  "version": "0.0.1",
+  "description": "Je sais pas monnome",
+  "main": "serveur.js",
+  "type": "module",
+  "scripts": {
+    "start": "node serveur.js",
+    "dev": "nodemon serveur.js --inspect"
+  },
+  "author": "Mikael Lagasse",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^2.0.12"
+  }
+}
