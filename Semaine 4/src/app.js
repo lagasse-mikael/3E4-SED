@@ -14,6 +14,10 @@ database();
 const app = express();
 const OK = 200;
 
+app.use(express.json());
 app.use(errorMiddleware);
+app.use('/planets',planetesRoutes)
+app.use('/elements',elementRoutes)
+
 
 export default app

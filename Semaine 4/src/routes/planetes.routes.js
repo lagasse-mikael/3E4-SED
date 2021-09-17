@@ -3,17 +3,19 @@ import HttpError from 'http-errors';
 import HttpStatus from 'http-status';
 
 import PLANETS from '../data/planets.js';
+import planetRepository from '../repositories/planet.repository.js';
 
 const router = express.Router();
 
 class PlanetesRoutes {
     constructor() {
         router.get('/', this.getAll); // => Il va savoir comment passer les parametres.
-        router.get('/:idPlanet', this.getPlanet)
-        router.post('/',this.post)
-        router.delete('/:idPlanet',this.delete)
-        router.patch('/:idPlanet',this.patch)
-        router.put('/:idPlanet',this.put)
+        router.get('/:idPlanet', this.getPlanet);
+        router.get('/:explorer', this.getAll);
+        router.post('/',this.post);
+        router.delete('/:idPlanet',this.delete);
+        router.patch('/:idPlanet',this.patch);
+        router.put('/:idPlanet',this.put);
     }
 
     post(req, res, next)
@@ -56,17 +58,29 @@ class PlanetesRoutes {
         return next(HttpError.MethodNotAllowed())
     }
 
-    getAll(request, reponse, next) {
-        reponse.status(200).json(PLANETS)
+    async getAll(request, reponse, next) {
+
+        try{
+            reponse.status(200).json(await planetRepository.retrieveAll(request.params.explorer))
+        }
+        catch(err){
+            return next(err);
+        }
     }
 
-    getPlanet(request, reponse, next) {
-        let planetChoisie = PLANETS.filter(p => p.id == request.params.idPlanet)[0];
+    async getPlanet(request, reponse, next) {
         
-        if(planetChoisie)
-            reponse.status(HttpStatus.OK).json(planetChoisie);
-        else
-            return next(HttpError.NotFound(`La planete ${request.params.idPlanet} n'est pas existante!`));
+        try{
+            let planetChoisie = await planetRepository.retrieveByID(request.params.idPlanet)
+            
+            if(planetChoisie)
+                reponse.status(HttpStatus.OK).json(planetChoisie);
+            else
+                return next(HttpError.NotFound(`La planete ${request.params.idPlanet} n'est pas existante!`));
+        }
+        catch(err){
+            return next(err);
+        }
     }
 }
 
