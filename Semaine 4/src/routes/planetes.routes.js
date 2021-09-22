@@ -9,76 +9,95 @@ const router = express.Router();
 
 class PlanetesRoutes {
     constructor() {
-        router.get('/', this.getAll); // => Il va savoir comment passer les parametres.
+        router.get('/', this.getAll);
         router.get('/:idPlanet', this.getPlanet);
         router.get('/:explorer', this.getAll);
-        router.post('/',this.post);
-        router.delete('/:idPlanet',this.delete);
-        router.patch('/:idPlanet',this.patch);
-        router.put('/:idPlanet',this.put);
+        router.post('/', this.post);
+        router.delete('/:idPlanet', this.delete);
+        router.patch('/:idPlanet', this.patch);
+        router.put('/:idPlanet', this.put);
     }
 
-    post(req, res, next)
-    {
+    async post(req, res, next) {
         const newPlanet = req.body;
 
-        // console.log(PLANETS.find(p => p.id == newPlanet.id))
-
-        if(PLANETS.find(p => p.id == newPlanet.id) == undefined)
-        {
-            console.log(`La planete ${newPlanet.name} a ete ajouter!`)
-            PLANETS.push(newPlanet)
-            res.status(HttpStatus.CREATED).json(newPlanet)
+        try {
+            let planetCree = await planetRepository.create(newPlanet)
+            
+            let transformOptions = {}
+            if (req.query.unit) {
+                transformOptions.unit = req.query.unit
+                planetCree = planetCree.toObject({ getters: false, virtuals: false })
+                planetCree = planetRepository.transform(planetCree, transformOptions)
+            }
+            res.status(HttpStatus.CREATED).json(planetCree)
         }
-        else
-            return next(HttpError.Conflict("Cette planete existe deja!"))
+        catch (err){
+            return next(err)
+        }
     }
 
-    delete(req, res, next)
-    {
+    delete(req, res, next) {
         const planeteToDelete = PLANETS.findIndex(p => p.id == req.params.idPlanet)
 
-        if(planeteToDelete != -1)
-        {
+        if (planeteToDelete != -1) {
             console.log(`La planete ${PLANETS[planeteToDelete].name} a ete supprimer!`)
-            PLANETS.splice(planeteToDelete , 1)
+            PLANETS.splice(planeteToDelete, 1)
             res.status(HttpStatus.NO_CONTENT).end()
         }
         else
             return next(HttpError.NotFound("Cette planete n'existe pas!"))
     }
 
-    patch(req, res, next)
-    {
+    patch(req, res, next) {
         return next(HttpError.NotImplemented())
     }
 
-    put(req, res, next)
-    {
+    put(req, res, next) {
         return next(HttpError.MethodNotAllowed())
     }
 
     async getAll(request, reponse, next) {
 
-        try{
-            reponse.status(200).json(await planetRepository.retrieveAll(request.params.explorer))
+        try {
+            let jsonRecu = await planetRepository.retrieveAll(request.query.explorer)
+
+            let transformOptions = { }
+            // Ajouter la verification a savoir si l'unit est legit.
+            if (request.query.unit) {
+                transformOptions.unit = request.query.unit
+                jsonRecu = jsonRecu.map(p => {
+                    p = p.toObject({ getters: false, virtuals: true })
+                    p = planetRepository.transform(p, transformOptions)
+                    return p
+                })
+            }
+
+            reponse.status(HttpStatus.OK).json(jsonRecu)
         }
-        catch(err){
+
+        catch (err) {
             return next(err);
         }
     }
 
     async getPlanet(request, reponse, next) {
-        
-        try{
+        try {
             let planetChoisie = await planetRepository.retrieveByID(request.params.idPlanet)
-            
-            if(planetChoisie)
+
+            let transformOptions = { }
+            if (planetChoisie) {
+                if (request.query.unit) {
+                    transformOptions.unit = request.query.unit
+                    planetChoisie = planetChoisie.toObject({ getters: false, virtuals: false })
+                    planetChoisie = planetRepository.transform(planetChoisie, transformOptions)
+                }
                 reponse.status(HttpStatus.OK).json(planetChoisie);
+            }
             else
                 return next(HttpError.NotFound(`La planete ${request.params.idPlanet} n'est pas existante!`));
         }
-        catch(err){
+        catch (err) {
             return next(err);
         }
     }
