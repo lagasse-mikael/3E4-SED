@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import Planet from "../models/planet.model.js";
 
 const KELVIN = -273.15
@@ -16,6 +17,17 @@ class PlanetRepository {
         return Planet.create(planet)
     }
 
+    delete(idPlanet)
+    {
+        return Planet.findByIdAndDelete(idPlanet)
+    }
+
+    update(idPlanet,planetModifs)
+    {
+        return Planet.findByIdAndUpdate(idPlanet,planetModifs,{new:true})
+    }
+
+
     transform(planet, transformOptions) {
         switch(transformOptions.unit)
         {
@@ -23,6 +35,11 @@ class PlanetRepository {
                 planet.temperature += KELVIN
                 planet.temperature = parseFloat(planet.temperature).toFixed(2)
         }
+
+        planet.discoveryDate = dayjs(planet.discoveredDate).format('YYY-MM-DD')
+
+        planet.lightSpeed = 
+            `${planet.position.x.ToString(16)}@${planet.position.y.ToString(16)}#${planet.position.z.ToString(16)}`
 
         delete planet.__v
         return planet

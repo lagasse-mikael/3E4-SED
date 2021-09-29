@@ -1,4 +1,5 @@
 import express from 'express';
+import { request } from 'express';
 import HttpError from 'http-errors';
 import HttpStatus from 'http-status';
 
@@ -19,12 +20,13 @@ class PlanetesRoutes {
     }
 
     async post(req, res, next) {
+        
         const newPlanet = req.body;
-
+        if(Object.keys(newPlanet).length == 0) { return next(HttpError.BadRequest('On ne peux pas cree une planete vide!')) }
         try {
             let planetCree = await planetRepository.create(newPlanet)
-            
-            let transformOptions = {}
+
+            let transformOptions = { }
             if (req.query.unit) {
                 transformOptions.unit = req.query.unit
                 planetCree = planetCree.toObject({ getters: false, virtuals: false })
@@ -32,25 +34,43 @@ class PlanetesRoutes {
             }
             res.status(HttpStatus.CREATED).json(planetCree)
         }
-        catch (err){
+        catch (err) {
             return next(err)
         }
     }
 
-    delete(req, res, next) {
-        const planeteToDelete = PLANETS.findIndex(p => p.id == req.params.idPlanet)
+    async delete(req, res, next) {
+        try {
+            if (!await planetRepository.delete(req.params.idPlanet))
+                return next(HttpError.NotFound(`La planete ${req.params.idPlanet} n'a pas ete trouver!`))
 
-        if (planeteToDelete != -1) {
-            console.log(`La planete ${PLANETS[planeteToDelete].name} a ete supprimer!`)
-            PLANETS.splice(planeteToDelete, 1)
-            res.status(HttpStatus.NO_CONTENT).end()
+            console.log(`La planete ${req.params.idPlanet} a ete supprimer!`)
+            res.status(HttpStatus.OK).end()
         }
-        else
-            return next(HttpError.NotFound("Cette planete n'existe pas!"))
+        catch (err) {
+            return next(err)
+        }
     }
 
-    patch(req, res, next) {
-        return next(HttpError.NotImplemented())
+    async patch(req, res, next) {
+        try {
+
+            // const planetToDotNotation
+            let planet = await planetRepository.update(req.params.idPlanet, req.body)
+
+            if (!planet)
+                return next(HttpError.NotFound(`La planete ${req.params.idPlanet} n'a pas ete trouver!`))
+
+            if (request.query.unit) {
+                transformOptions.unit = request.query.unit
+                planetChoisie = planetChoisie.toObject({ getters: false, virtuals: false })
+                planetChoisie = planetRepository.transform(planetChoisie, transformOptions)
+            }
+            reponse.status(HttpStatus.OK).json(planetChoisie);
+        }
+        catch (err) {
+            return next(err)
+        }
     }
 
     put(req, res, next) {
