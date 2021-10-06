@@ -29,10 +29,9 @@ async function getPlanets() {
 function displayPlanet(planet)
 {
     let planetFormatHTML = `<div class="card col-2 mx-2 my-2">`
+    planetFormatHTML += `<a href="./details.html?href=${planet.href}"><img class="card-img-top" src="${planet.icon}"></a>`
+    planetFormatHTML += `<a href="./details.html?href=${planet.href}"><h5 class="card-title">${planet.name}</h5></a>`
     
-    planetFormatHTML += `<img class="card-img-top" src="${planet.icon}">`
-    planetFormatHTML += `<h5 class="card-title">${planet.name}</h5>`
-
     planetFormatHTML += `</div>`;
     return planetFormatHTML
 }
