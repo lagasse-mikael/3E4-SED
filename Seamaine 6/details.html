@@ -34,7 +34,7 @@
 
 <body>
     <div class="container">
-        <h1>Detail d'une planete</h1>
+        <h1>Detail d'un chien</h1>
         <div class="row">
             <div class="col-9 row">
                 <div id="info-planet" class="col-4">
@@ -62,7 +62,47 @@
             </div>
 
             <div class="col-3">
-                <!-- Satellites -->
+                <h5>Satellites</h5>
+                <ul class="row" id="satellites"></ul>
+            </div>
+        </div>
+        <div class="row">
+            <h3 class="col-12">Portals</h3>
+            <div class="col-8">
+                <table id="portals" class="table">
+                    <thead id="tab">
+                        <tr>
+                            <th scope="col">Positions</th>
+                            <th scope="col">Affinity</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="col-4">
+                <div class="row">
+                    <h5>Decouverte d'un portail</h5>
+                </div>
+                <div class="form-group">
+                    <label for="txtPosition">Position :</label>
+                    <input type="text" class="form-control" id="txtPosition"/>
+                </div>
+                <div class="form-group">
+                    <select name="" id="cboAffinity" class="form-select">
+                        <option>air</option>
+                        <option>darkness</option>
+                        <option>earth</option>
+                        <option>energy</option>
+                        <option>fire</option>
+                        <option>life</option>
+                        <option>light</option>
+                        <option>logic</option>
+                        <option>music</option>
+                        <option>space</option>
+                        <option>toxic</option>
+                        <option>water</option>
+                    </select>
+                </div>
+                <button id="btnAddPortal" class="btn btn-info">Soumettre</button>
             </div>
         </div>
     </div>
