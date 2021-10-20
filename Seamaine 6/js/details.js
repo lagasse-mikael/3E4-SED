@@ -18,14 +18,47 @@ $(document).ready(() => {
     $('#btnAddPortal').click(() => {
         addPortal();
     })
+
+    $('#btnExtraction').click(() => {
+        extractionPlanet();
+    })
+
 })
 
-function addPortal()
-{
+async function extractionPlanet() {
+    const MINING_URL = `${urlParams.href}/actions?type=mine`
+    const reponse = await axios.get(MINING_URL);
+
+    console.log(reponse.data);
+
+    if (reponse.status == 200) {
+        displayElements(reponse.data)
+    } else {
+        console.log(reponse)
+    }
+}
+
+async function addPortal() {
+
     const position = $('#txtPosition').val().toUpperCase()
     const affinity = $('#cboAffinity').val()
 
-    $('#tab').append(`<tr><td>${position}</td><td><img src="img/${affinity}.png" title="${affinity}"></td></tr>`)
+    const isPositionValid = document.getElementById("txtPosition").checkValidity();
+
+    if (isPositionValid) {
+        const ADD_PORTAL_URL = `${urlParams.href}/portals`
+        const body = {
+            position: position,
+            affinity: affinity
+        }
+
+        const reponse = await axios.post(ADD_PORTAL_URL, body)
+        if (reponse.status == 201) {
+            displayPortals([reponse.data])
+        } else {
+            console.log(reponse)
+        }
+    }
 }
 
 async function getPlanet(href) {
@@ -57,9 +90,17 @@ async function getPlanet(href) {
     }
 }
 
-function displayPortals(portals)
-{
+function displayPortals(portals) {
     portals.forEach(p => {
         $('#tab').append(`<tr><td>${p.position}</td><td><img src="img/${p.affinity}.png" title="${p.affinity}"></td></tr>`)
+    })
+}
+
+function displayElements(elements) {
+    const ELEMENT_IMG_URL = 'https://assets.andromia.science/elements'
+    $('#resExt').empty();
+    
+    elements.forEach(e => {
+        $('#resExt').append(`<tr><td><img src="${ELEMENT_IMG_URL}/${e.element}.png" width="75px">${e.element}</td><td>${e.quantity}</td></tr>`)
     })
 }

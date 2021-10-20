@@ -58,6 +58,33 @@
                         <label for="lblPosition" class="col-4">Positon : </label>
                         <label id="lblPosition" class="col-8"></label>
                     </div>
+                    <div class="row">
+                        <button id="btnExtraction" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalRessources">Extraction</button>
+                    </div>
+                    <div class="modal fade" id="modalRessources" tabindex="-1" aria-labelledby="modalRessourcesLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="modalRessourcesLabel">Ressources extraites</h5>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                              <table id="extraction" class="table">
+                                  <tr>
+                                      <th scope="col">Element</th>
+                                      <th scope="col">Quantite</th>
+                                  </tr>
+                                  <tbody id="resExt">
+
+                                  </tbody>
+                              </table>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-info" data-bs-dismiss="modal">Fermer</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                 </div>
             </div>
 
@@ -84,7 +111,7 @@
                 </div>
                 <div class="form-group">
                     <label for="txtPosition">Position :</label>
-                    <input type="text" class="form-control" id="txtPosition"/>
+                    <input type="text" class="form-control" id="txtPosition" pattern="[A-Z]{1,2}[0-9]{3}"/>
                 </div>
                 <div class="form-group">
                     <select name="" id="cboAffinity" class="form-select">
