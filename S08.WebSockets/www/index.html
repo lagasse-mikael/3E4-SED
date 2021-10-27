@@ -55,15 +55,19 @@
                                                 <button id="btnUpdateUsername" type="button" class="btn btn-info">
                                                     <i class="fa fa-refresh"></i>
                                                 </button>
+                                                <button id="btnUpdateImage" type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalImages">
+                                                    <i class="fa fa-paw" aria-hidden="true"></i>
+
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
-                                    <ul class="users"></ul>
+                                    <ul class="users" id="listUser"></ul>
                                 </div>
                             </div>
                             <div class="col-xl-8 col-lg-8 col-md-8 col-sm-9 col-9">
                                 <div class="selected-user">
-                                    <span>Demo <span class="name">Socket.IO</span></span>
+                                    <span class="name">Parc a chien</span>
                                 </div>
                                 <div class="chat-container">
                                     <ul id="chat-messages" class="chat-box chat-scroll"></ul>
@@ -77,11 +81,6 @@
                                             </div>
                                         </div>
                                     </div>
-
-
-                                    <!-- <div class="form-group row mt-3 mb-0">
-                                        <textarea class="form-control" rows="3" placeholder="Type your message here..."></textarea>
-                                    </div> -->
                                 </div>
                             </div>
                         </div>
@@ -98,4 +97,31 @@
     
     </div>
 </body>
+<div class="modal fade" id="modalImages" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalImages">Choisie ton chien - marche pas encore</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" id="listeDesChiens">
+          <button id="img1btn" class="btn" data-dismiss="modal"><img src="./photos_de_chien/img1.jpeg" alt="" width="60" height="60"></button>
+          <button id="img2btn"class="btn" data-dismiss="modal"><img src="./photos_de_chien/img2.jpeg" alt="" width="60" height="60"></button>
+          <button id="img3btn" class="btn" data-dismiss="modal"><img src="./photos_de_chien/img3.jpeg" alt="" width="60" height="60"></button>
+          <button id="img4btn" class="btn" data-dismiss="modal"><img src="./photos_de_chien/img4.jpeg" alt="" width="60" height="60"></button>
+          <button id="img5btn" class="btn" data-dismiss="modal"><img src="./photos_de_chien/img5.jpeg" alt="" width="60" height="60"></button>
+          <button id="img6btn" class="btn" data-dismiss="modal"><img src="./photos_de_chien/img6.jpeg" alt="" width="60" height="60"></button>
+          <button id="img7btn" class="btn" data-dismiss="modal"><img src="./photos_de_chien/img7.jpeg" alt="" width="60" height="60"></button>
+          <button id="img8btn" class="btn" data-dismiss="modal"><img src="./photos_de_chien/img8.jpeg" alt="" width="60" height="60"></button>
+          <button id="img9btn" class="btn" data-dismiss="modal"><img src="./photos_de_chien/img9.jpeg" alt="" width="60" height="60"></button>
+          <button id="img10btn" class="btn" data-dismiss="modal"><img src="./photos_de_chien/img10.jpeg" alt="" width="60" height="60"></button>
+          <button id="img11btn" class="btn" data-dismiss="modal"><img src="./photos_de_chien/img11.jpeg" alt="" width="60" height="60"></button>
+          <button id="img12btn" class="btn" data-dismiss="modal"><img src="./photos_de_chien/img12.jpeg" alt="" width="60" height="60"></button>
+          <button id="img13btn" class="btn" data-dismiss="modal"><img src="./photos_de_chien/img13.jpeg" alt="" width="60" height="60"></button>
+        </div>
+      </div>
+    </div>
+  </div>
 </html>
