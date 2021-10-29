@@ -38,7 +38,7 @@ $(document).ready(() => {
     $("#img1btn,#img2btn,#img3btn,#img4btn,#img5btn,#img6btn,#img7btn,#img8btn,#img9btn,#img10btn,#img11btn,#img12btn,#img13btn").click(function(event) {
         // A faire!
         console.log(event.target.src)
-        // alert(`${event.target.id}`);  
+        // alert(`${event.target.id}`);
     });
 
 });
