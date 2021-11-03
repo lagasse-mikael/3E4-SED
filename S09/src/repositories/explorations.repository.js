@@ -1,4 +1,5 @@
 import Exploration from '../models/exploration.model.js';
+import repoPlanet from '../repositories/planet.repository.js'
 
 class ExplorationsRepository {
 
@@ -12,21 +13,23 @@ class ExplorationsRepository {
         return retrieveQuery
     }
 
-    retrieveAll() {
-        return Exploration.find()
+    retrieveAll(retrieveOptions = { }) {
+        const reponseAll = Exploration.find().skip(retrieveOptions.skip).limit(retrieveOptions.limit)
+        const estimatedCountQuery = Exploration.estimatedDocumentCount()
+
+        return Promise.all([reponseAll,estimatedCountQuery])
     }
 
     transform(exploration, transformOptions) {
-
         if (transformOptions.embed && transformOptions.embed.planet) {
-
+            exploration.planet = repoPlanet.transform(exploration.planet, transformOptions)
         } else {
             exploration.planet = {
-                href: `${process.env.URL}/planets/${exploration.planet}`
+                href: `/planets/${exploration.planet}`
             }
         }
-        
-        exploration.href = `${process.env.URL}/explorations/${exploration._id}`
+
+        exploration.href = `/explorations/${exploration._id}`
         delete exploration._id
 
 

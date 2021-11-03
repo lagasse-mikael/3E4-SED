@@ -14,6 +14,12 @@ const app = express();
 
 app.use(express.json());
 
+app.use((req,res,next) => {
+    
+    res.header('base_url',process.env.URL)
+    next()
+})
+
 app.use('/planets', planetsRoutes);
 app.use('/explorations', explorationsRoutes);
 
