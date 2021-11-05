@@ -16,20 +16,20 @@ class PlanetsRoutes {
     }
 
     async patch(req, res, next) {
-        
+
         try {
             let planet = await planetRepository.update(req.params.idPlanet, req.body);
 
-            if(!planet) {
+            if (!planet) {
                 return next(HttpError.NotFound(`La planète avec l'identifiant ${req.params.idPlanet} n'existe pas`));
             }
 
-            planet = planet.toObject({getters:false, virtuals:false});
+            planet = planet.toObject({ getters: false, virtuals: false });
             planet = planetRepository.transform(planet);
 
             res.status(200).json(planet);
 
-        } catch(err) {
+        } catch (err) {
             return next(err);
         }
     }
@@ -43,10 +43,10 @@ class PlanetsRoutes {
             const deleteResult = await planetRepository.delete(req.params.idPlanet);
             if (!deleteResult) {
                 return next(HttpError.NotFound(`La planète avec l'identifiant ${req.params.idPlanet} n'existe pas`));
-            } 
+            }
             res.status(204).end();
-            
-        } catch(err) {
+
+        } catch (err) {
             return next(err);
         }
     }
@@ -54,35 +54,35 @@ class PlanetsRoutes {
     async post(req, res, next) {
         const newPlanet = req.body;
 
-        if(Object.keys(newPlanet).length === 0) {
+        if (Object.keys(newPlanet).length === 0) {
             return next(HttpError.BadRequest('La planète ne peut pas contenir aucune donnée'));
         }
-        
-        try  {
+
+        try {
             let planetAdded = await planetRepository.create(newPlanet);
-            planetAdded = planetAdded.toObject({getters:false, virtuals:false});
+            planetAdded = planetAdded.toObject({ getters: false, virtuals: false });
             planetAdded = planetRepository.transform(planetAdded);
 
             res.status(201).json(planetAdded);
-        } catch(err) {
+        } catch (err) {
             return next(err);
         }
 
-        
+
     }
 
     async getAll(req, res, next) {
-        
-        const filter = {};
-        if(req.query.explorer) {
+
+        const filter = { };
+        if (req.query.explorer) {
             filter.discoveredBy = req.query.explorer;
         }
 
         //Validation des paramètres de la request
-        const transformOptions = {};
-        if(req.query.unit) {
+        const transformOptions = { };
+        if (req.query.unit) {
             const unit = req.query.unit;
-            if(unit === 'c') {
+            if (unit === 'c') {
                 transformOptions.unit = unit;
             } else {
                 return next(HttpError.BadRequest('Le paramètre unit doit avoir la valeur c pour Celsius'));
@@ -93,13 +93,13 @@ class PlanetsRoutes {
             let planets = await planetRepository.retrieveAll(filter);
 
             planets = planets.map(p => {
-                p = p.toObject({getters:false, virtuals:false});
+                p = p.toObject({ getters: false, virtuals: false });
                 p = planetRepository.transform(p, transformOptions);
                 return p;
             });
 
             res.status(200).json(planets);
-        } catch(err) {
+        } catch (err) {
             return next(err);
         }
 
@@ -109,10 +109,17 @@ class PlanetsRoutes {
         const idPlanet = req.params.idPlanet;
 
         //Validation des paramètres de la request
-        const transformOptions = {};
-        if(req.query.unit) {
+        const transformOptions = { embed: { } };
+        const retrieveOptions = { };
+
+        if (req.query.embed && req.query.embed == 'explorations') {
+            retrieveOptions.explorations = true
+            transformOptions.embed.explorations = true
+        }
+
+        if (req.query.unit) {
             const unit = req.query.unit;
-            if(unit === 'c') {
+            if (unit === 'c') {
                 transformOptions.unit = unit;
             } else {
                 return next(HttpError.BadRequest('Le paramètre unit doit avoir la valeur c pour Celsius'));
@@ -120,11 +127,11 @@ class PlanetsRoutes {
         }
 
         try {
-            let planet = await planetRepository.retrieveById(idPlanet);
+            let planet = await planetRepository.retrieveById(idPlanet,retrieveOptions);
 
             if (planet) {
                 //1. J'ai une planète
-                planet = planet.toObject({getters:false, virtuals:false});
+                planet = planet.toObject({ getters: false, virtuals: true });
                 planet = planetRepository.transform(planet, transformOptions);
                 res.status(200).json(planet);
             } else {

@@ -1,12 +1,19 @@
 import Planet from '../models/planet.model.js';
 import objectToDotNotation from '../libs/objectToDotNotation.js';
 import dayjs from 'dayjs';
+import exploRepo from './explorations.repository.js'
 
 const ZERO_KELVIN = -273.15;
 class PlanetRepository {
 
-    retrieveById(idPlanet) {
-        return Planet.findById(idPlanet);
+    retrieveById(idPlanet,retrieveOptions = {}) {
+        const retrieveQuery = Planet.findById(idPlanet)
+
+        if (retrieveOptions.explorations) {
+            retrieveQuery.populate('explorations')
+        }
+
+        return retrieveQuery;
     }
 
     retrieveAll(filter) {
@@ -35,6 +42,13 @@ class PlanetRepository {
                 planet.temperature = parseFloat(planet.temperature.toFixed(2));
             }
         }
+
+        if(transformOptions.embed && transformOptions.embed.explorations){
+            planet.explorations = planet.explorations.map(exploration => {
+                return exploRepo.transform(exploration,transformOptions)
+            })
+        }
+
 
         planet.discoveryDate = dayjs(planet.discoveryDate).format('YYYY-MM-DD');
 

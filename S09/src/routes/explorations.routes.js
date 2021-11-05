@@ -33,6 +33,9 @@ class ExplorationsRoutes {
 
             const pageCount = Math.ceil(documentsCount / retrieveOptions.limit)
             const hasNextPage = paginate.hasNextPages(req)(pageCount)
+            const pageArray = paginate.getArrayPages(req)(3,pageCount,req.query.page)
+
+            console.log(pageArray);
 
             const reponse = {
                 _metadata: {
@@ -44,13 +47,25 @@ class ExplorationsRoutes {
                     totalDocumentsCount: documentsCount
                 },
                 _links:{
-                    firstPage:null,
-                    beforePage:null,
-                    thisPage:null,
-                    nextPage:null,
-                    lastPage:null,
+                    firstPage:`/explorations?page=0&limit=${req.query.limit}`,
+                    beforePage:pageArray[0].url,
+                    thisPage:pageArray[1].url,
+                    nextPage:pageArray[2].url,
+                    lastPage:`/explorations?page=${pageCount}&limit=${req.query.limit}`
                 },
                 data: explorations
+            }
+
+            if(req.query.page == 1){
+                delete reponse._links.beforePage
+                reponse._links.thisPage = pageArray[0].url
+                reponse._links.nextPage = pageArray[1].url
+            }
+
+            if(!hasNextPage){
+                delete reponse._links.nextPage
+                reponse._links.beforePage = pageArray[1].url
+                reponse._links.thisPage = pageArray[2].url
             }
 
             res.status(200).json(reponse);
