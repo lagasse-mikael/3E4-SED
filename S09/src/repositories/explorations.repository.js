@@ -14,7 +14,7 @@ class ExplorationsRepository {
     }
 
     retrieveAll(retrieveOptions = { }) {
-        const reponseAll = Exploration.find().skip(retrieveOptions.skip).limit(retrieveOptions.limit)
+        const reponseAll = Exploration.find().skip(retrieveOptions.skip).limit(retrieveOptions.limit).sort('-explorationDate')
         const estimatedCountQuery = Exploration.estimatedDocumentCount()
 
         return Promise.all([reponseAll,estimatedCountQuery])
